@@ -15,7 +15,7 @@
 """
 The Trainer class, to easily train a 🤗 Transformers from scratch or finetune it on a new task.
 """
-
+from clearml import Task
 import collections
 import inspect
 import math
@@ -1529,6 +1529,7 @@ class Trainer:
         # Save the Trainer state
         if self.is_world_process_zero():
             self.state.save_to_json(os.path.join(output_dir, "trainer_state.json"))
+            Task.current_task().upload_artifact(name='trainer_state', artifact_object=os.path.join(output_dir, "trainer_state.json"))            
 
         # Save RNG state in non-distributed training
         rng_states = {
